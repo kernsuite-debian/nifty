@@ -5,7 +5,11 @@ Maintainer: Athanaseus Ramaila <aramaila@ska.ac.za>
 Build-Depends:
  debhelper (>= 10),
  dh-python,
+ git,
+ libfftw3-dev,
  python3-all,
+ python-fftw,
+ python3-pytest-cov,
  python3-setuptools,
  python3-scipy
 Standards-Version: 4.1.2
@@ -16,7 +20,12 @@ Package: python3-nifty
 Architecture: all
 Section: python
 Multi-Arch: foreign
-Depends: ${python3:Depends}, ${misc:Depends}
+Depends:
+ ${python3:Depends},
+ ${misc:Depends},
+ python3-matplotlib,
+ python3-mpi4py,
+ ssh
 Description: Numerical Information Field Theory (Python 3)
  NIFTy, "Numerical Information Field Theory", is
  a versatile library designed to enable the development of signal

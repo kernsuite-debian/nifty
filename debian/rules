@@ -6,4 +6,8 @@ export DH_VERBOSE = 1
 export PYBUILD_NAME=nifty
 
 %:
-	dh $@ --with python3 --buildsystem=pybuild
+	dh $@ --with python3 --parallel --buildsystem=pybuild
+
+override_dh_clean:
+	dh_clean
+	rm -rf nifty5/git_version.py
