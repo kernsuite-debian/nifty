@@ -1,0 +1,28 @@
+Source: nifty
+Section: science
+Priority: optional
+Maintainer: Athanaseus Ramaila <aramaila@ska.ac.za>
+Build-Depends:
+ debhelper (>= 10),
+ dh-python,
+ python3-all,
+ python3-setuptools,
+ python3-scipy
+Standards-Version: 4.1.2
+Homepage: https://gitlab.mpcdf.mpg.de/ift/nifty
+X-Python3-Version: >= 3.5
+
+Package: python3-nifty
+Architecture: all
+Section: python
+Multi-Arch: foreign
+Depends: ${python3:Depends}, ${misc:Depends}
+Description: Numerical Information Field Theory (Python 3)
+ NIFTy, "Numerical Information Field Theory", is
+ a versatile library designed to enable the development of signal
+ inference algorithms that operate regardless of the underlying grids
+ (spatial, spectral, temporal, …) and their resolutions.
+ Its object-oriented framework is written in Python, although it accesses
+ libraries written in C++ and C for efficiency.
+ .
+ This package installs the library for Python 3.
