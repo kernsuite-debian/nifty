@@ -50,6 +50,7 @@ from .operators.value_inserter import ValueInserter
 from .operators.energy_operators import (
     EnergyOperator, GaussianEnergy, PoissonianEnergy, InverseGammaLikelihood,
     BernoulliEnergy, StandardHamiltonian, AveragedEnergy)
+from .operators.convolution_operators import FuncConvolutionOperator
 
 from .probing import probe_with_posterior_samples, probe_diagonal, \
     StatCalculator
@@ -84,6 +85,7 @@ from .library.wiener_filter_curvature import WienerFilterCurvature
 from .library.correlated_fields import CorrelatedField, MfCorrelatedField
 from .library.adjust_variances import (make_adjust_variances_hamiltonian,
                                        do_adjust_variances)
+from .library.nfft import NFFT
 
 from . import extra
 
@@ -92,6 +94,11 @@ from .utilities import memo, frozendict
 from .logger import logger
 
 from .linearization import Linearization
+
+from . import internal_config
+_scheme = internal_config.parallelization_scheme()
+if _scheme == "Samples":
+    from .minimization.metric_gaussian_kl_mpi import MetricGaussianKL_MPI
 
 # We deliberately don't set __all__ here, because we don't want people to do a
 # "from nifty5 import *"; that would swamp the global namespace.

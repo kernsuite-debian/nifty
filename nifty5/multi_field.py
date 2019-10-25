@@ -56,7 +56,7 @@ class MultiField(object):
                                     'defined on DomainTuples.')
             domain = MultiDomain.make({key: v._domain
                                        for key, v in dict.items()})
-        res = tuple(dict[key] if key in dict else Field(dom, 0)
+        res = tuple(dict[key] if key in dict else Field(dom, 0.)
                     for key, dom in zip(domain.keys(), domain.domains()))
         return MultiField(domain, res)
 
@@ -192,8 +192,12 @@ class MultiField(object):
         return self._transform(lambda x: x.conjugate())
 
     def clip(self, min=None, max=None):
-        return MultiField(self._domain,
-                          tuple(clip(v, min, max) for v in self._val))
+        ncomp = len(self._val)
+        lmin = min._val if isinstance(min, MultiField) else (min,)*ncomp
+        lmax = max._val if isinstance(max, MultiField) else (max,)*ncomp
+        return MultiField(
+            self._domain,
+            tuple(self._val[i].clip(lmin[i], lmax[i]) for i in range(ncomp)))
 
     def all(self):
         for v in self._val:
@@ -212,6 +216,12 @@ class MultiField(object):
             return self
         return MultiField(subset,
                           tuple(self[key] for key in subset.keys()))
+
+    def extract_part(self, subset):
+        if subset is self._domain:
+            return self
+        return MultiField.from_dict({key: self[key] for key in subset.keys()
+                                     if key in self})
 
     def unite(self, other):
         """Merges two MultiFields on potentially different MultiDomains.
@@ -307,7 +317,6 @@ class MultiField(object):
 for op in ["__add__", "__radd__",
            "__sub__", "__rsub__",
            "__mul__", "__rmul__",
-           "__div__", "__rdiv__",
            "__truediv__", "__rtruediv__",
            "__floordiv__", "__rfloordiv__",
            "__pow__", "__rpow__",
