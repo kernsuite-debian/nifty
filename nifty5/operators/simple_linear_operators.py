@@ -63,6 +63,35 @@ class ConjugationOperator(EndomorphicOperator):
         return x.conjugate()
 
 
+class WeightApplier(EndomorphicOperator):
+    """Operator multiplying its input by a given power of dvol.
+
+    Parameters
+    ----------
+    domain: Domain, tuple of domains or DomainTuple
+        domain of the input field
+    spaces: list or tuple of int
+        indices of subdomains for which the weights shall be applied
+    power: int
+        the power of to be used for the volume factors
+
+    """
+    def __init__(self, domain, spaces, power):
+        from .. import utilities
+        self._domain = DomainTuple.make(domain)
+        if spaces is None:
+            self._spaces = None
+        else:
+            self._spaces = utilities.parse_spaces(spaces, len(self._domain))
+        self._power = int(power)
+        self._capability = self._all_ops
+
+    def apply(self, x, mode):
+        self._check_input(x, mode)
+        power = self._power if (mode & 3) else -self._power
+        return x.weight(power, spaces=self._spaces)
+
+
 class Realizer(EndomorphicOperator):
     """Operator returning the real component of its input.
 
@@ -118,13 +147,48 @@ class FieldAdapter(LinearOperator):
             return MultiField(self._tgt(mode), (x,))
 
     def __repr__(self):
-        key = self.domain.keys()[0]
-        return 'FieldAdapter: {}'.format(key)
+        return 'FieldAdapter'
+
+
+class _SlowFieldAdapter(LinearOperator):
+    """Operator for conversion between Fields and MultiFields.
+    The operator is built so that the MultiDomain is always the target.
+    Its domain is `tgt[name]`
+
+    Parameters
+    ----------
+    dom : dict or MultiDomain:
+        the operator's dom
+
+    name : String
+        The relevant key of the MultiDomain.
+    """
+
+    def __init__(self, dom, name):
+        from ..sugar import makeDomain
+        tmp = makeDomain(dom)
+        if not isinstance(tmp, MultiDomain):
+            raise TypeError("MultiDomain expected")
+        self._name = str(name)
+        self._domain = tmp
+        self._target = tmp[name]
+        self._capability = self.TIMES | self.ADJOINT_TIMES
+
+    def apply(self, x, mode):
+        self._check_input(x, mode)
+        if isinstance(x, MultiField):
+            return x[self._name]
+        else:
+            return MultiField.from_dict({self._name: x},
+                                        domain=self._tgt(mode))
+
+    def __repr__(self):
+        return '_SlowFieldAdapter'
 
 
 def ducktape(left, right, name):
     """Convenience function creating an operator that converts between a
-    DomainTuple and a single-entry MultiDomain.
+    DomainTuple and a MultiDomain.
 
     Parameters
     ----------
@@ -146,36 +210,48 @@ def ducktape(left, right, name):
     - `left` and `right` must not be both `None`, but one of them can (and
       probably should) be `None`. In this case, the missing information is
       inferred.
-    - the returned operator's domains are
-        - a `DomainTuple` and
-        - a `MultiDomain` with exactly one entry called `name` and the same
-          `DomainTuple`
-
-      Which of these is the domain and which is the target depends on the
-      input.
 
     Returns
     -------
-    FieldAdapter : an adapter operator converting between the two (possibly
-                   partially inferred) domains.
+    FieldAdapter or _SlowFieldAdapter
+        an adapter operator converting between the two (possibly
+        partially inferred) domains.
     """
     from ..sugar import makeDomain
     from .operator import Operator
+    if isinstance(right, Operator):
+        right = right.target
+    elif right is not None:
+        right = makeDomain(right)
+    if isinstance(left, Operator):
+        left = left.domain
+    elif left is not None:
+        left = makeDomain(left)
     if left is None:  # need to infer left from right
-        if isinstance(right, Operator):
-            right = right.target
-        elif right is not None:
-            right = makeDomain(right)
         if isinstance(right, MultiDomain):
             left = right[name]
         else:
             left = MultiDomain.make({name: right})
-    else:
-        if isinstance(left, Operator):
-            left = left.domain
+    elif right is None:  # need to infer right from left
+        if isinstance(left, MultiDomain):
+            right = left[name]
         else:
-            left = makeDomain(left)
-    return FieldAdapter(left, name)
+            right = MultiDomain.make({name: left})
+    lmulti = isinstance(left, MultiDomain)
+    rmulti = isinstance(right, MultiDomain)
+    if lmulti+rmulti != 1:
+        raise ValueError("need exactly one MultiDomain")
+    if lmulti:
+        if len(left) == 1:
+            return FieldAdapter(left, name)
+        else:
+            return _SlowFieldAdapter(left, name).adjoint
+    if rmulti:
+        if len(right) == 1:
+            return FieldAdapter(left, name)
+        else:
+            return _SlowFieldAdapter(right, name)
+    raise ValueError("must not arrive here")
 
 
 class GeometryRemover(LinearOperator):
@@ -239,3 +315,23 @@ class NullOperator(LinearOperator):
     def apply(self, x, mode):
         self._check_input(x, mode)
         return self._nullfield(self._tgt(mode))
+
+
+class _PartialExtractor(LinearOperator):
+    def __init__(self, domain, target):
+        if not isinstance(domain, MultiDomain):
+            raise TypeError("MultiDomain expected")
+        if not isinstance(target, MultiDomain):
+            raise TypeError("MultiDomain expected")
+        self._domain = domain
+        self._target = target
+        for key in self._target.keys():
+            if not (self._domain[key] is not self._target[key]):
+                raise ValueError("domain mismatch")
+        self._capability = self.TIMES | self.ADJOINT_TIMES
+
+    def apply(self, x, mode):
+        self._check_input(x, mode)
+        if mode == self.TIMES:
+            return x.extract(self._target)
+        return MultiField.from_dict({key: x[key] for key in x.domain.keys()})

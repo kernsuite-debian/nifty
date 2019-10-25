@@ -4,7 +4,7 @@ NIFTy - Numerical Information Field Theory
 [![coverage report](https://gitlab.mpcdf.mpg.de/ift/NIFTy/badges/NIFTy_5/coverage.svg)](https://gitlab.mpcdf.mpg.de/ift/NIFTy/commits/NIFTy_5)
 
 **NIFTy** project homepage:
-[http://ift.pages.mpcdf.de/NIFTy](http://ift.pages.mpcdf.de/NIFTy)
+[http://ift.pages.mpcdf.de/nifty](http://ift.pages.mpcdf.de/nifty)
 
 Summary
 -------
@@ -60,7 +60,7 @@ Optional dependencies:
 The current version of Nifty5 can be obtained by cloning the repository and
 switching to the NIFTy_5 branch:
 
-    git clone https://gitlab.mpcdf.mpg.de/ift/NIFTy.git
+    git clone https://gitlab.mpcdf.mpg.de/ift/nifty.git
 
 ### Installation
 
@@ -70,7 +70,7 @@ distributions, the "apt" lines will need slight changes.
 NIFTy5 and its mandatory dependencies can be installed via:
 
     sudo apt-get install git python3 python3-pip python3-dev
-    pip3 install --user git+https://gitlab.mpcdf.mpg.de/ift/NIFTy.git@NIFTy_5
+    pip3 install --user git+https://gitlab.mpcdf.mpg.de/ift/nifty.git@NIFTy_5
 
 Plotting support is added via:
 
@@ -116,13 +116,13 @@ following command in the repository root:
 ### First Steps
 
 For a quick start, you can browse through the [informal
-introduction](http://ift.pages.mpcdf.de/NIFTy/code.html) or
+introduction](http://ift.pages.mpcdf.de/nifty/code.html) or
 dive into NIFTy by running one of the demonstrations, e.g.:
 
     python3 demos/getting_started_1.py
 
 
-### Acknowledgement
+### Acknowledgements
 
 Please acknowledge the use of NIFTy in your publication(s) by using a
 phrase such as the following:
@@ -130,10 +130,10 @@ phrase such as the following:
 > "Some of the results in this publication have been derived using the
 > NIFTy package [(https://gitlab.mpcdf.mpg.de/ift/NIFTy)](https://gitlab.mpcdf.mpg.de/ift/NIFTy)"
 
-and a citation to one of the [publications](http://ift.pages.mpcdf.de/NIFTy/citations.html).
+and a citation to one of the [publications](http://ift.pages.mpcdf.de/nifty/citations.html).
 
 
-### Release Notes
+### Licensing terms
 
 The NIFTy package is licensed under the terms of the
 [GPLv3](https://www.gnu.org/licenses/gpl.html) and is distributed

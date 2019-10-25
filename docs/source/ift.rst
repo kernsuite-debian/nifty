@@ -4,7 +4,7 @@ IFT -- Information Field Theory
 Theoretical Background
 ----------------------
 
-`Information Field Theory <http://www.mpa-garching.mpg.de/ift/>`_ [1]_  (IFT) is information theory, the logic of reasoning under uncertainty, applied to fields.
+`Information Field Theory <https://www.mpa-garching.mpg.de/ift/>`_ [1]_  (IFT) is information theory, the logic of reasoning under uncertainty, applied to fields.
 A field can be any quantity defined over some space, e.g. the air temperature over Europe, the magnetic field strength in the Milky Way, or the matter density in the Universe.
 IFT describes how data and knowledge can be used to infer field properties.
 Mathematically it is a statistical field theory and exploits many of the tools developed for such.
@@ -21,15 +21,15 @@ NIFTy comes with reimplemented MAP and VI estimators.
 
 .. tip:: *In-a-nutshell introductions to information field theory* can be found in [2]_, [3]_, [4]_, and [5]_, with the latter probably being the most didactical.
 
-.. [1] T.A. Enßlin et al. (2009), "Information field theory for cosmological perturbation reconstruction and nonlinear signal analysis", PhysRevD.80.105005, 09/2009; `[arXiv:0806.3474] <http://www.arxiv.org/abs/0806.3474>`_
+.. [1] T.A. Enßlin et al. (2009), "Information field theory for cosmological perturbation reconstruction and nonlinear signal analysis", PhysRevD.80.105005, 09/2009; `[arXiv:0806.3474] <https://www.arxiv.org/abs/0806.3474>`_
 
-.. [2] T.A. Enßlin (2013), "Information field theory", proceedings of MaxEnt 2012 -- the 32nd International Workshop on Bayesian Inference and Maximum Entropy Methods in Science and Engineering; AIP Conference Proceedings, Volume 1553, Issue 1, p.184; `[arXiv:1301.2556] <http://arxiv.org/abs/1301.2556>`_
+.. [2] T.A. Enßlin (2013), "Information field theory", proceedings of MaxEnt 2012 -- the 32nd International Workshop on Bayesian Inference and Maximum Entropy Methods in Science and Engineering; AIP Conference Proceedings, Volume 1553, Issue 1, p.184; `[arXiv:1301.2556] <https://arxiv.org/abs/1301.2556>`_
 
-.. [3] T.A. Enßlin (2014), "Astrophysical data analysis with information field theory", AIP Conference Proceedings, Volume 1636, Issue 1, p.49; `[arXiv:1405.7701] <http://arxiv.org/abs/1405.7701>`_
+.. [3] T.A. Enßlin (2014), "Astrophysical data analysis with information field theory", AIP Conference Proceedings, Volume 1636, Issue 1, p.49; `[arXiv:1405.7701] <https://arxiv.org/abs/1405.7701>`_
 
 .. [4] Wikipedia contributors (2018), `"Information field theory" <https://en.wikipedia.org/w/index.php?title=Information_field_theory&oldid=876731720>`_, Wikipedia, The Free Encyclopedia.
 
-.. [5] T.A. Enßlin (2019), "Information theory for fields", accepted by Annalen der Physik; `[DOI] <https://doi.org/10.1002/andp.201800127>`_, `[arXiv:1804.03350] <http://arxiv.org/abs/1804.03350>`_
+.. [5] T.A. Enßlin (2019), "Information theory for fields", accepted by Annalen der Physik; `[DOI] <https://doi.org/10.1002/andp.201800127>`_, `[arXiv:1804.03350] <https://arxiv.org/abs/1804.03350>`_
 
 
 
@@ -37,7 +37,7 @@ NIFTy comes with reimplemented MAP and VI estimators.
 Free Theory & Implicit Operators
 --------------------------------
 
-A free IFT appears when the signal field :math:`{s}` and the noise :math:`{n}` of the data :math:`{d}` are independent, zero-centered Gaussian processes of kown covariances :math:`{S}` and :math:`{N}`, respectively,
+A free IFT appears when the signal field :math:`{s}` and the noise :math:`{n}` of the data :math:`{d}` are independent, zero-centered Gaussian processes of known covariances :math:`{S}` and :math:`{N}`, respectively,
 
 .. math::
 
@@ -49,7 +49,7 @@ and the measurement equation is linear in both signal and noise,
 
     d= R\, s + n,
 
-with :math:`{R}` being the measurement response, which maps the continous signal field into the discrete data space.
+with :math:`{R}` being the measurement response, which maps the continuous signal field into the discrete data space.
 
 This is called a free theory, as the information Hamiltonian
 
@@ -96,8 +96,8 @@ These implicit operators can be combined into new operators, e.g. to :math:`{D^{
 The invocation of an inverse operator applied to a vector might trigger the execution of a numerical linear algebra solver.
 
 Thus, when NIFTy calculates :math:`{m = D\, j}`, it actually solves :math:`{D^{-1} m = j}` for :math:`{m}` behind the scenes.
-The advantage of implicit operators to explicit matrices is the reduced memory requirements.
-The reconstruction of only a Megapixel image would otherwithe require the storage and processing of matrices with sizes of several Terabytes.
+The advantage of implicit operators compared to explicit matrices is the reduced memory consumption;
+for the reconstruction of just a Megapixel image the latter would already require several Terabytes.
 Larger images could not be dealt with due to the quadratic memory requirements of explicit operator representations.
 
 The demo codes `demos/getting_started_1.py` and `demos/Wiener_Filter.ipynb` illustrate this.
@@ -106,7 +106,7 @@ The demo codes `demos/getting_started_1.py` and `demos/Wiener_Filter.ipynb` illu
 Generative Models
 -----------------
 
-For more sophisticated measurement situations, involving non-linear measuremnts, unknown covariances, calibration constants and the like, it is recommended to formulate those as generative models for which NIFTy provides powerful inference algorithms.
+For more sophisticated measurement situations (involving non-linear measurements, unknown covariances, calibration constants and the like) it is recommended to formulate those as generative models for which NIFTy provides powerful inference algorithms.
 
 In a generative model, all known or unknown quantities are described as the results of generative processes, which start with simple probability distributions, like the uniform, the i.i.d. Gaussian, or the delta distribution.
 
@@ -129,7 +129,7 @@ NIFTy takes advantage of this formulation in several ways:
 1) All prior degrees of freedom have unit covariance, which improves the condition number of operators that need to be inverted.
 
 2) The amplitude operator can be regarded as part of the response, :math:`{R'=R\,A}`.
-   In general, more sophisticated responses can be constructed out of the composition of simpler operators.
+   In general, more sophisticated responses can be obtained by combining simpler operators.
 
 3) The response can be non-linear, e.g. :math:`{R'(s)=R \exp(A\,\xi)}`, see `demos/getting_started_2.py`.
 
@@ -168,7 +168,7 @@ Maximum a Posteriori
 
 One popular field estimation method is Maximum a Posteriori (MAP).
 
-It only requires to minimize the information Hamiltonian, e.g by a gradient descent method that stops when
+It only requires minimizing the information Hamiltonian, e.g. by a gradient descent method that stops when
 
 .. math::
 

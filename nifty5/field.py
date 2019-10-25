@@ -626,6 +626,11 @@ class Field(object):
             raise ValueError("domain mismatch")
         return self
 
+    def extract_part(self, dom):
+        if dom != self._domain:
+            raise ValueError("domain mismatch")
+        return self
+
     def unite(self, other):
         return self+other
 
@@ -636,6 +641,8 @@ class Field(object):
         return 0.5*(1.+self.tanh())
 
     def clip(self, min=None, max=None):
+        min = min.local_data if isinstance(min, Field) else min
+        max = max.local_data if isinstance(max, Field) else max
         return Field(self._domain, dobj.clip(self._val, min, max))
 
     def one_over(self):
@@ -656,7 +663,6 @@ class Field(object):
 for op in ["__add__", "__radd__",
            "__sub__", "__rsub__",
            "__mul__", "__rmul__",
-           "__div__", "__rdiv__",
            "__truediv__", "__rtruediv__",
            "__floordiv__", "__rfloordiv__",
            "__pow__", "__rpow__",
