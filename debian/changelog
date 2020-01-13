@@ -3,7 +3,7 @@ nifty (5.0.1-1kern1) bionic; urgency=medium
   [ Athanaseus Javas Ramaila ]
   * New upstream release 5.0.1
 
- -- athanaseus <athanaseus@athanaseus-E5550>  Fri, 25 Oct 2019 13:19:38 +0200
+ -- KERN packaging <packaging@kernsuite.info>  Fri, 25 Oct 2019 13:19:38 +0200
 
 nifty (5.0.0-1kern1) bionic; urgency=medium
 
